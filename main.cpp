@@ -8,10 +8,12 @@
 #include <string>
 
 #define NUM_OF_STRINGS 27
+constexpr auto DEFAULT_TEXT_COLOR = 15;
 
 using namespace std;
 CONSOLE_SCREEN_BUFFER_INFO scrBufferInfo;
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 HWND consoleWin = GetConsoleWindow();
 COORD CursorPosition;
 COORD newSize;
@@ -82,9 +84,9 @@ void resolution(int opt) {
 	system("cls");
 	int o = opt;
 	//screen width(px), screen height(px),
-	//screen width(letters), screen height(letters),
+	//screen width(letters), screen height(letters);
 	int res[3][4] = {
-		473, 424, 54, 23,
+		361, 424, 40, 23,
 		873, 664, 104, 38,
 		1153, 1016, 139, 60
 	};
@@ -129,7 +131,9 @@ void mainMenu() {
 	int menuPosY[N];
 	//STRINGS positions 2-6
 	gotoxy(SCREEN_WIDTH / 2 - 6, menuPosY[0] = SCREEN_HEIGHT / 2 - 2);
+	SetConsoleTextAttribute(console, 12);
 	cout << STRINGS[2]; //new game
+	SetConsoleTextAttribute(console, DEFAULT_TEXT_COLOR);
 	gotoxy(SCREEN_WIDTH / 2 - 6, menuPosY[1] = SCREEN_HEIGHT / 2 - 1);
 	cout << STRINGS[3]; ///load game
 	gotoxy(SCREEN_WIDTH / 2 - 6, menuPosY[2] = SCREEN_HEIGHT / 2);
@@ -314,6 +318,7 @@ void loadOptions() {
 }
 void loadStrings() {
 	fstream readStrings;
+	//readStrings.close();
 	if (options[1] == 1)
 	{
 		readStrings.open("language/en_EN.txt", ios::in);
@@ -322,10 +327,21 @@ void loadStrings() {
 	{
 		readStrings.open("language/pl_PL.txt", ios::in);
 	}
-	for (int i = 1; i <= NUM_OF_STRINGS; i++)
+	if (!readStrings.good())
+	{
+		cout << "not good";
+		Sleep(2000);
+		//readStrings.close();
+	}
+	for (int i = 1; i < NUM_OF_STRINGS; i++)
 	{
 		getline(readStrings, STRINGS[i]);
 	}
+	/*for (int i = 0; i < NUM_OF_STRINGS; i++)
+	{
+		cout << STRINGS[i] << endl;
+	}
+	Sleep(2000);*/
 
 	readStrings.close();
 }
